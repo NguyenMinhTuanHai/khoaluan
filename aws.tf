@@ -9,7 +9,7 @@ variable "ec2-key" {
 }
 
 variable "ami" {
-  default = "ami-0328671e8c353bc9c"
+  default = "ami-05b891753d41ff88f"
 }
 
 resource "aws_vpc" "hai-vpc" {
