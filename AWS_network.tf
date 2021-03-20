@@ -1,17 +1,3 @@
-//code này tạo dược máy ảo oke
-provider "aws" {
-  profile    = "default"
-  region     = "ap-southeast-1" //khu vuc singapore
-}
-
-variable "ec2-key" {
-  default = "ssh_key"
-}
-
-variable "ami" {
-  default = "ami-05b891753d41ff88f"
-}
-
 resource "aws_vpc" "hai-vpc" {
   cidr_block = "10.0.0.0/16"
 
@@ -110,50 +96,3 @@ resource "aws_security_group" "allow_all_ssh_http_https" {
     Name = "allow_all_ssh_http_https"
   }
 }
-
-resource "aws_instance" "web-server" {
-  ami                    = var.ami
-  instance_type          = "t2.micro"
-  key_name               = var.ec2-key
-  vpc_security_group_ids = [aws_security_group.allow_all_ssh_http_https.id]
-
-  tags = {
-    Name = "terraform-web-server"
-  }
-}
-
-// nếu gặp lỗi default subnet
-//aws ec2 create-default-subnet --availability-zone ap-southeast-1a
-//code cai phan mem
-//bash <( curl -k https://raw.githubusercontent.com/vuukhanhduy/kdata-vps/main/install )
-//copy file
-//scp -i ../ssh_key.pem source-20210122.tar.gz centos@13.229.57.157:~/.
-//scp -i ../ssh_key.pem wordpress.sql  centos@13.229.57.157:~/.
-
-//mv * /home/tuanhaikhanhduy.tk/public_html/
-//tar -zxvf source-20210122.tar.gz 
-//cd var/www/demo1.tamtt.ml/public_html/
-//mv * ../../../..
-//rm -rf var
-
-
-//
-//vi /etc/nginx/conf.d/tuanhaikhanhduy.tk.conf
-/*
-        #access_log off;
-        access_log   /home/tuanhaikhanhduy.tk/logs/access_log;
-        #error_log off;
-        error_log /home/tuanhaikhanhduy.tk/logs/error.log;
-*/
-
-//service nginx restart
-//tailf /home/tuanhaikhanhduy.tk/logs/error.log
-
-// vi /etc/nginx/conf.d/tuanhaikhanhduy.tk.conf
-// fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-
-//vi wp-config.php
-//define( 'WP_HOME', 'http://example.com' );
-//define( 'WP_SITEURL', 'http://example.com' );
-
-//fc95c92ebd2a
