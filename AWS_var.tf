@@ -2,7 +2,7 @@ variable "ec2-key" {
   default = "ssh_key"
 }
 
-//mã ami(hệ điều hành máy ảo)
+//mã ami lấy tại https://wiki.centos.org/Cloud/AWS#head-78d1e3a4e6ba5c5a3847750d88266916ffe69648
 variable "ami" {
-  default = "ami-05b891753d41ff88f"
+  default = "ami-0adfdaea54d40922b"
 }

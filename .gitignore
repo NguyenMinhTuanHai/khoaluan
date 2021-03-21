@@ -1,3 +1,4 @@
 ssh_key.pem
 terraform.tfstate
 .terraform
+terraform.tfstate.backup
