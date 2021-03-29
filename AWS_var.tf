@@ -6,3 +6,7 @@ variable "ec2-key" {
 variable "ami" {
   default = "ami-0adfdaea54d40922b"
 }
+
+variable "ssh_key" {
+  default = "ssh_key.pem"
+}
