@@ -2,4 +2,4 @@ ssh_key.pem
 terraform.tfstate
 .terraform
 terraform.tfstate.backup
-wordpress-source/public_html
+/wordpress-source/public_html
