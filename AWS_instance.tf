@@ -22,7 +22,7 @@ resource "aws_instance" "web-server" {
       type        = "ssh"
       user        = "centos"
       private_key = file(var.ssh_key)
-      host        = "${aws_instance.web-server.public_ip}"
+      host        = aws_instance.web-server.public_ip
     }
   }
 
@@ -35,7 +35,7 @@ resource "aws_instance" "web-server" {
       type        = "ssh"
       user        = "centos"
       private_key = file(var.ssh_key)
-      host        = "${aws_instance.web-server.public_ip}"
+      host        = aws_instance.web-server.public_ip
     }
   }
 
