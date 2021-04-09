@@ -3,4 +3,5 @@ terraform.tfstate
 .terraform
 terraform.tfstate.backup
 /wordpress-source/public_html
-!inventory
+.terraform.tfstate.lock.info
+inventory
