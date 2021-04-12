@@ -9,12 +9,34 @@ resource "aws_instance" "web-server" {
   provisioner "local-exec" {
     command = "echo [ansible_client] > inventory"
   }
-
+  
   provisioner "local-exec" {
     command = "echo ${aws_instance.web-server.public_ip} ansible_ssh_user=centos ansible_ssh_private_key_file=ssh_key.pem >> inventory"
   }
+
+  provisioner "local-exec" {
+    command = "echo '# Kiem tra ket noi bang lenh:' >> inventory"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '# ansible ansible_client -i inventory -m ping' >> inventory"
+  }
   
+  provisioner "local-exec" {
+    command = "echo '# Cai dat su dung playbook' >> inventory"
+  }
   
+  provisioner "local-exec" {
+    command = "echo '# ansible-playbook playbook.yml -i inventory -v' >> inventory"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '# Lenh ssh vao Instance' >> inventory"
+  }
+  
+  provisioner "local-exec" {
+    command = "echo '# ssh -i ssh_key.pem centos@${aws_instance.web-server.public_ip} ' >> inventory"
+  }
 
   // Tạo thư mục lưu file trong wordpress-source
   /*provisioner "remote-exec" {

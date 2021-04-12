@@ -4,51 +4,108 @@
   remote_user: root
   become: true
   tasks:
-  - name: Cai dat LAMP
+  # update all packages
+  - name: Update Packages
     yum:
-      name: ['httpd', 'mariadb-server', 'mariadb', 'php', 'php-mysql', 'php-fpm']
-      state: present
-  - name: run httpd
-    service:
-        name: httpd
-        state: started
-  - name: create content
-    copy:
-        content: "Kiem tra ket noi toi instance"
-        dest: /var/www/html/index.html
-  
-  - name: dam bao service da duoc enable va chay
-    service:
-        name: "{{item}}"
-        state: started
-        enabled: True
-    with_items:
-    - mariadb
-    - httpd
-
-  - name: Cai firewalld
-    yum:
-      name: firewalld
+      name: '*'
       state: latest
-    #notify:
-    #  - start firewalld
-  
-  - name: start firewalld
-    service: 
-      name: firewalld 
-      state: started
+
+  # Add repo    
+  - name: Add repo MariaDB
+    yum_repository:
+      name: mariadb
+      description: MariaDB Repo
+      file: mariadb
+      gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+      baseurl: http://yum.mariadb.org/10.4.18/rhel7-amd64/
+      gpgcheck: 1
+
+  - name: Add repo Nginx
+    yum_repository:
+      name: nginx-stable
+      description: nginx stable repo
+      file: nginx
+      gpgkey: https://nginx.org/keys/nginx_signing.key
+      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+      gpgcheck: 1
       enabled: yes
 
-  - name: Cho phep HTTP va HTTPS di qua duoc Firewall
-    firewalld:
-      service: "{{item}}"
-      state: enabled
-      permanent: True
-      immediate: True
-    become: True
-    with_items:
-    - http
-    - https
+  # Install MariaDB, Nginx
+  - name: Install Mariadb, Nginx
+    yum:
+      name: "{{ item }}"
+      update_cache: yes
+      state: latest
+    loop: [ 'nginx', 'MariaDB-server', 'MariaDB-client' ]
+
+  # Install Php
+  - copy:
+      src: ./scripts/php_install.sh
+      dest: /root/php_install.sh
+      owner: root
+      group: root
+      mode: 0755
+
+  # Install Php
+  - name: Install Php and Php Extensions
+    command: sh /root/php_install.sh
+  
+  # Copy source from local host to remote AWS instance
+  - copy:
+      src: ./wordpress-source/
+      dest: /root/remote-wordpress-source
+      owner: root
+      group: root
+      mode: 0755
+
+
+  # - name: Cai dat LAMP
+  #   yum:
+  #     name: ['httpd', 'mariadb-server', 'mariadb', 'php', 'php-mysql', 'php-fpm']
+  #     state: present
+
+  # - name: run httpd
+  #   service:
+  #       name: httpd
+  #       state: started
+
+  # - name: create content
+  #   copy:
+  #       content: "Kiem tra ket noi toi instance"
+  #       dest: /var/www/html/index.html
+  
+  # - name: dam bao service da duoc enable va chay
+  #   service:
+  #       name: "{{item}}"
+  #       state: started
+  #       enabled: True
+  #   with_items:
+  #   - mariadb
+  #   - httpd
+
+  # - name: Cai firewalld
+  #   yum:
+  #     name: firewalld
+  #     state: latest
+  #   #notify:
+  #   #  - start firewalld
+  
+  # - name: start firewalld
+  #   service: 
+  #     name: firewalld 
+  #     state: started
+  #     enabled: yes
+
+  # - name: Cho phep HTTP va HTTPS di qua duoc Firewall
+  #   firewalld:
+  #     service: "{{item}}"
+  #     state: enabled
+  #     permanent: True
+  #     immediate: True
+  #   become: True
+  #   with_items:
+  #   - http
+  #   - https
 
   #handlers:
   #  - name: start firewalld
