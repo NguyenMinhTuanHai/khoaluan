@@ -7,35 +7,59 @@ resource "aws_instance" "web-server" {
 
   // tạo file inventory với thông tin máy ảo sẵn sàng
   provisioner "local-exec" {
-    command = "echo [ansible_client] > inventory"
+    command = "echo ansible_client: > ansible/inventory.yml"
   }
   
   provisioner "local-exec" {
-    command = "echo ${aws_instance.web-server.public_ip} ansible_ssh_user=centos ansible_ssh_private_key_file=ssh_key.pem >> inventory"
+    command = "echo '  hosts:' >> ansible/inventory.yml"
   }
 
   provisioner "local-exec" {
-    command = "echo '# Kiem tra ket noi bang lenh:' >> inventory"
+    command = "echo '    ${aws_instance.web-server.public_ip}' >> ansible/inventory.yml"
   }
 
   provisioner "local-exec" {
-    command = "echo '# ansible ansible_client -i inventory -m ping' >> inventory"
-  }
-  
-  provisioner "local-exec" {
-    command = "echo '# Cai dat su dung playbook' >> inventory"
-  }
-  
-  provisioner "local-exec" {
-    command = "echo '# ansible-playbook playbook.yml -i inventory -v' >> inventory"
+    command = "echo '  vars:' >> ansible/inventory.yml"
   }
 
   provisioner "local-exec" {
-    command = "echo '# Lenh ssh vao Instance' >> inventory"
+    command = "echo '    domain: helloworld.com' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '    ansible_user: centos' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '    ansible_ssh_private_key_file: ssh_key.pem' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '    # ansible_sudo_pass: qwerty' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '# Kiem tra ket noi bang lenh:' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '# ansible ansible_client -i ansible/inventory.yml -m ping' >> ansible/inventory.yml"
   }
   
   provisioner "local-exec" {
-    command = "echo '# ssh -i ssh_key.pem centos@${aws_instance.web-server.public_ip} ' >> inventory"
+    command = "echo '# Cai dat su dung playbook' >> ansible/inventory.yml"
+  }
+  
+  provisioner "local-exec" {
+    command = "echo '# ansible-playbook ansible/inventory.yml -i ansible/inventory.yml -v' >> ansible/inventory.yml"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '# Lenh ssh vao Instance' >> ansible/inventory.yml"
+  }
+  
+  provisioner "local-exec" {
+    command = "echo '# ssh -i ssh_key.pem centos@${aws_instance.web-server.public_ip} ' >> ansible/inventory.yml"
   }
 
   // Tạo thư mục lưu file trong wordpress-source

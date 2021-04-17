@@ -1,8 +1,14 @@
 ansible_client:
   hosts:
-    13.229.107.7
+    54.254.143.40
   vars:
     domain: helloworld.com
     ansible_user: centos
-    ansible_ssh_private_key_file: ../ssh_key.pem
+    ansible_ssh_private_key_file: ssh_key.pem
     # ansible_sudo_pass: qwerty
+# Kiem tra ket noi bang lenh:
+# ansible ansible_client -i inventory.yml -m ping
+# Cai dat su dung playbook
+# ansible-playbook ansible/playbook.yml -i ansible/inventory.yml -v
+# Lenh ssh vao Instance
+# ssh -i ssh_key.pem centos@54.254.143.40 
