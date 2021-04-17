@@ -52,63 +52,54 @@
   
   # Copy source from local host to remote AWS instance
   - copy:
-      src: ./wordpress-source/
+      src: ../wordpress-source/
       dest: /root/remote-wordpress-source
       owner: root
       group: root
       mode: 0755
 
+  - name: Start services
+    service:
+        name: "{{item}}"
+        state: started
+        enabled: True
+    with_items:
+    - mariadb
+    - nginx
+ 
 
-  # - name: Cai dat LAMP
-  #   yum:
-  #     name: ['httpd', 'mariadb-server', 'mariadb', 'php', 'php-mysql', 'php-fpm']
-  #     state: present
+  #######################################18/04/2021
 
-  # - name: run httpd
-  #   service:
-  #       name: httpd
-  #       state: started
+  - name: "create www directory"
+    file:
+      path: /var/www/example_website
+      state: directory
+      mode: '0775'
+      owner: "centos"
+      group: "centos"
 
-  # - name: create content
-  #   copy:
-  #       content: "Kiem tra ket noi toi instance"
-  #       dest: /var/www/html/index.html
-  
-  # - name: dam bao service da duoc enable va chay
-  #   service:
-  #       name: "{{item}}"
-  #       state: started
-  #       enabled: True
-  #   with_items:
-  #   - mariadb
-  #   - httpd
+  - name: delete default nginx site
+    file:
+      path: /etc/nginx/conf.d/default.conf
+      state: absent
+    notify: restart nginx
 
-  # - name: Cai firewalld
-  #   yum:
-  #     name: firewalld
-  #     state: latest
-  #   #notify:
-  #   #  - start firewalld
-  
-  # - name: start firewalld
-  #   service: 
-  #     name: firewalld 
-  #     state: started
-  #     enabled: yes
+  - name: copy nginx site.conf
+    template:
+      src: nginx/site.conf.j2
+      dest: /etc/nginx/conf.d/default.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify: restart nginx
 
-  # - name: Cho phep HTTP va HTTPS di qua duoc Firewall
-  #   firewalld:
-  #     service: "{{item}}"
-  #     state: enabled
-  #     permanent: True
-  #     immediate: True
-  #   become: True
-  #   with_items:
-  #   - http
-  #   - https
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
 
-  #handlers:
-  #  - name: start firewalld
-  #    service: 
-  #      name: firewalld
-  #      state: started
+
+  #######################################
+
+

@@ -1,0 +1,8 @@
+ansible_client:
+  hosts:
+    13.229.107.7
+  vars:
+    domain: helloworld.com
+    ansible_user: centos
+    ansible_ssh_private_key_file: ../ssh_key.pem
+    # ansible_sudo_pass: qwerty
