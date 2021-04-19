@@ -51,7 +51,7 @@ resource "aws_instance" "web-server" {
   }
   
   provisioner "local-exec" {
-    command = "echo '# ansible-playbook ansible/inventory.yml -i ansible/inventory.yml -v' >> ansible/inventory.yml"
+    command = "echo '# ansible-playbook ansible/playbook.yml -i ansible/inventory.yml -v' >> ansible/inventory.yml"
   }
 
   provisioner "local-exec" {
