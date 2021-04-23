@@ -1,0 +1,45 @@
+server {
+    listen 80;
+    server_name {{ domain_name }} www.{{ domain_name }};
+    access_log {{ log_folder }}/access.log;
+    error_log {{ log_folder }}/error.log;
+    root {{ root_folder }};
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ .php$ {
+        try_files $uri $uri/ =404;
+        fastcgi_split_path_info ^(.+.php)(/.+)$;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_intercept_errors on;
+        if (-f $request_filename)
+        {   
+            fastcgi_pass unix:/var/run/php-fpm.sock;
+        }
+    }
+    
+    location ~ ^/phpmyadmin {
+        rewrite ^/* /phpMyAdmin last;
+    }
+    location ~ ^/pma {
+        rewrite ^/* /phpMyAdmin last;
+    }
+    location ^~ /phpMyAdmin/log/ {
+        deny all;
+    }
+    location ^~ /phpMyAdmin/libraries/ {
+        deny all;
+    }
+    location ^~ /phpMyAdmin/templates/ {
+        deny all;
+    }
+    location ^~ /phpMyAdmin/tmp/ {
+        deny all;
+    }
+
+}

@@ -1,0 +1,5 @@
+---
+# Port
+https_port: "443/tcp"
+http_port: "80/tcp"
+ssh_port: "2309/tcp"

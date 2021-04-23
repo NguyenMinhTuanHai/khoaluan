@@ -1,0 +1,2 @@
+# Lenh ssh vao Instance
+# ssh -i ssh_key.pem centos@13.229.132.106 

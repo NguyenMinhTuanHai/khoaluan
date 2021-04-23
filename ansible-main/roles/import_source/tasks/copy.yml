@@ -1,0 +1,38 @@
+---
+# Copy source
+- copy:
+    src: ./roles/import_source/files/isphone.tk.zip
+    dest: /root/isphone.tk.zip
+    owner: root
+    group: root
+    mode: 0755
+
+# Check dir
+- name: Ansible check directory.
+  stat:
+    path: "{{ root_folder }}"
+  register: source_folder
+
+- name: "Echo if directory already existed"
+  debug:
+    msg: "Root Folder is already existed"
+  when: source_folder.stat.exists
+
+- name: "Ansible Create directory if not exists"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    group: nginx
+    owner: nginx
+  with_items:
+    - "{{ root_folder }}"
+    - "{{ log_folder }}"
+  when: source_folder.stat.exists == false
+
+# Import source to root folder
+- name: Unzip Source Code
+  ansible.builtin.unarchive:
+    src: /root/isphone.tk.zip
+    dest: "{{ root_folder }}"
+    remote_src: yes

@@ -1,0 +1,10 @@
+---
+- name: "Firewalld - allow port http_port"
+  firewalld:
+    zone: public
+    port: "{{ item }}"
+    permanent: true
+    state: enabled 
+  loop: [ "{{ http_port }}", "{{ https_port }}", "{{ ssh_port }}" ]
+  notify:
+    - restart firewalld

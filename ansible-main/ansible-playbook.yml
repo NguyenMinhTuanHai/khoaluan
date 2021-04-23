@@ -1,0 +1,9 @@
+---
+- name: Setup LEMP
+  hosts: webserver
+  become: yes
+  become_user: root
+  roles:
+      # - lemp
+      # - firewalld
+      - import_source

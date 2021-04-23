@@ -1,0 +1,47 @@
+---
+- name: Config Domain Nginx
+  template:
+    src: "templates/domain.com.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ http_conf }}"
+  notify:
+    - restart nginx
+
+- name: Check Default.conf File Exists
+  stat:
+    path: /etc/nginx/conf.d/default.conf 
+  register: default_file
+
+- name: Move default site
+  command: "{{ item }}"
+  with_items:
+    - mv /etc/nginx/conf.d/default.conf /etc/nginx/default.conf
+    - echo "include /etc/nginx/default.conf;" >> /etc/nginx/nginx.conf
+  notify:
+    - restart nginx
+  when: default_file.stat.exists
+
+- name: Change Database Name In Source Code
+  ansible.builtin.lineinfile:
+    path: "{{ root_folder }}/wp-config.php"
+    regexp: ^.*DB_NAME.*$
+    line: define('DB_NAME', '{{ database_name }}');
+
+- name: Change Database User In Source Code
+  ansible.builtin.lineinfile:
+    path: "{{ root_folder }}/wp-config.php"
+    regexp: ^.*DB_USER.*$
+    line: define('DB_USER', '{{ database_user }}');
+
+- name: Change Database Password In Source Code
+  ansible.builtin.lineinfile:
+    path: "{{ root_folder }}/wp-config.php"
+    regexp: ^.*DB_PASSWORD.*$
+    line: define('DB_PASSWORD', '{{ database_password }}');
+
+- name: Change Database Host In Source Code
+  ansible.builtin.lineinfile:
+    path: "{{ root_folder }}/wp-config.php"
+    regexp: ^.*DB_HOST.*$
+    line: define('DB_HOST', 'localhost');
+  notify:
+    - restart nginx

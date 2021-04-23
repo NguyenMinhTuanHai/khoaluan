@@ -1,0 +1,73 @@
+---
+- name: Update Packages
+  yum:
+    name: '*'
+    state: latest
+ # Add repo    
+- name: Add repo MariaDB
+  yum_repository:
+    name: mariadb
+    description: MariaDB Repo
+    file: mariadb
+    gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+    baseurl: http://yum.mariadb.org/10.4.18/rhel7-amd64/
+    gpgcheck: 1
+
+- name: Add repo Nginx
+  yum_repository:
+    name: nginx-stable
+    description: nginx stable repo
+    file: nginx
+    gpgkey: https://nginx.org/keys/nginx_signing.key
+    baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgcheck: 1
+    enabled: yes
+
+    # Install MariaDB, Nginx
+- name: Install Mariadb, Nginx
+  yum: 
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop: [ 'nginx', 'MariaDB-server', 'MariaDB-client', 'MySQL-python', 'unzip', 'firewalld' ]
+  notify:
+    - start nginx
+    - start mariadb
+# Copy script and install Php
+- copy:
+    src: ./roles/lemp/files/php_install.sh
+    dest: /root/php_install.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install Php and Php Extensions
+  command: sh /root/php_install.sh
+  notify:
+    - start php-fpm
+
+- name: Config Php 
+  template:
+    src: "templates/www.conf.j2"
+    dest: "/etc/php-fpm.d/www.conf"
+  notify:
+    - restart php-fpm
+
+- name: Config Nginx
+  template:
+    src: "templates/nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+  notify:
+    - restart nginx
+
+- name: Config Default File Nginx
+  template:
+    src: "templates/default.conf.j2"
+    dest: "/etc/nginx/conf.d/default.conf"
+  notify:
+    - restart nginx
+
+- name: Sets Up PHP Info Page
+  template:
+    src: "files/info.php.j2"
+    dest: "/usr/share/nginx/html/info.php"

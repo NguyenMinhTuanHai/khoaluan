@@ -1,0 +1,12 @@
+---
+domain_name: "dtsdomain.ga"
+http_port: "80"
+https_port: "443"
+http_conf: "dtsdomain.ga.conf"
+root_folder: "/home/{{ domain_name }}/public_html"
+log_folder: "/home/{{ domain_name }}/logs"
+database_name: "isphone"
+database_user: "isphone_user"
+database_password: "Admin123"
+mysql_root_password: "7581460d"
+blowfish: "kD-yDcjIVT,;KMGs.-mOavG9VU7QP0hc"

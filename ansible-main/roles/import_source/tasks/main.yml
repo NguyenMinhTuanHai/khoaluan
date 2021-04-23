@@ -1,0 +1,5 @@
+---
+- import_tasks: copy.yml
+- import_tasks: install_phpmyadmin.yml
+- import_tasks: import_source.yml
+- import_tasks: import_database.yml

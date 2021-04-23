@@ -1,0 +1,58 @@
+---
+# Download phpMyAdmin
+- name: Download phpMyAdmin
+  get_url: 
+    url: https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-all-languages.zip
+    dest: /usr/share/phpMyAdmin.zip 
+
+# Install phpMyAdmin
+- name: Unzip phpMyAdmin
+  ansible.builtin.unarchive:
+    src: /usr/share/phpMyAdmin.zip
+    dest: /usr/share/
+    remote_src: yes
+
+# Move folder
+- name: Install PhpMyAdmin
+  command: "{{ item }}"
+  with_items:
+    - mv /usr/share/phpMyAdmin-5.0.2-all-languages /usr/share/phpMyAdmin
+    - mv /usr/share/phpMyAdmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php
+  notify:
+    - restart php-fpm
+
+- name: Add blowfish_secret
+  ansible.builtin.lineinfile:
+    path: /usr/share/phpMyAdmin/config.inc.php
+    regexp: '^.*blowfish_secret.*$'
+    line: "$cfg['blowfish_secret'] = '{{ blowfish }}'"
+
+- name: Add tmp folder phpMyAdmin.
+  lineinfile:
+    path: /usr/share/phpMyAdmin/config.inc.php
+    line: $cfg['TempDir'] = '/usr/share/phpMyAdmin/tmp/';
+
+- name: Delete file and folder 
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /usr/share/phpMyAdmin.zip
+    - /usr/share/phpMyAdmin/setup
+
+# Link phpMyAdmin
+- name: link PhpMyAdmin
+  file:
+    src: /usr/share/phpMyAdmin
+    dest: "{{ root_folder }}/phpMyAdmin"
+    state: link
+
+- name: Change permission phpMyAdmin
+  file:
+    path: "{{ item }}"
+    owner: nginx
+    group: nginx
+    recurse: yes
+  with_items:
+    - "{{ root_folder }}/*"
+    - "{{ root_folder }}/wp-content/uploads"

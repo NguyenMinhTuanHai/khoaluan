@@ -1,0 +1,11 @@
+---
+domain_name: "localhost"
+http_port: "80"
+https_port: "443"
+http_conf: "default.conf"
+root_folder: "/var/www/html"
+log_folder: "/var/log/nginx"
+database_name: "wordpress"
+database_user: "user"
+database_password: "Admin123"
+mysql_root_password: "7581460d"

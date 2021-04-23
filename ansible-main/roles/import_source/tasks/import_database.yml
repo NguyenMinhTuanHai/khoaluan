@@ -1,0 +1,47 @@
+# MySQL Configuration
+- name: Updated Mariadb Root Password 
+  mysql_user:  
+    name: root  
+    host: "{{ item }}"  
+    password: "{{ mysql_root_password }}"  
+    login_user: root  
+    login_password: "{{ mysql_root_password }}"  
+    check_implicit_admin: yes  
+    priv: "*.*:ALL,GRANT"  
+  with_items:  
+    - "{{ ansible_hostname }}"  
+    - 127.0.0.1  
+    - ::1  
+    - localhost
+
+- name: Create Database
+  mysql_db: 
+    name: "{{ database_name }}" 
+    state: present
+    login_password: "{{ mysql_root_password }}" 
+
+- name: Create Database User
+  mysql_user:
+    name: "{{ database_user }}"
+    password: "{{ database_password }}"
+    host: localhost
+    priv: "{{ database_name }}.*:ALL,GRANT"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Import Database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: import
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    target: "{{ root_folder }}/database.sql"
+
+- name: Change Site URL 
+  command: "{{ item }}"
+  with_items: 
+    - mysql -u root -p{{ mysql_root_password}} {{ database_name }} -e "UPDATE wp_options SET option_value = replace(option_value, 'http://isphone.tk', 'http://{{ domain_name }}') WHERE option_name = 'home' OR option_name = 'siteurl';"
+    - mysql -u root -p{{ mysql_root_password}} {{ database_name }} -e "UPDATE wp_posts SET guid = replace(guid, 'http://isphone.tk','http://{{ domain_name }}');"
+    - mysql -u root -p{{ mysql_root_password}} {{ database_name }} -e "UPDATE wp_posts SET post_content = replace(post_content, 'http://isphone.tk', 'http://{{ domain_name }}');"
+    - mysql -u root -p{{ mysql_root_password}} {{ database_name }} -e "UPDATE wp_postmeta SET meta_value = replace(meta_value,'http://isphone.tk','http://{{ domain_name }}');"

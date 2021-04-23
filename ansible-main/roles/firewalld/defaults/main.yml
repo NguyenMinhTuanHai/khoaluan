@@ -1,0 +1,5 @@
+---
+# Default Ports
+https_port: "443/tcp"
+http_port: "80/tcp"
+ssh_port: "22/tcp"
