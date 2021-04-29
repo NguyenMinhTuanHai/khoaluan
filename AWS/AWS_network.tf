@@ -76,8 +76,8 @@ resource "aws_security_group" "allow_all_ssh_http_https" {
   }
 
   ingress {
-    from_port   = 2000
-    to_port     = 2000
+    from_port   = 2309
+    to_port     = 2309
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     ipv6_cidr_blocks     = ["::/0"]

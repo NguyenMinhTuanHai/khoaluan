@@ -1,6 +1,7 @@
 ---
 # Copy source
-- copy:
+- name: Copy source code
+  copy:
     src: ./roles/import_source/files/isphone.tk.zip
     dest: /root/isphone.tk.zip
     owner: root
@@ -36,3 +37,6 @@
     src: /root/isphone.tk.zip
     dest: "{{ root_folder }}"
     remote_src: yes
+
+- name: Flush handlers
+  meta: flush_handlers

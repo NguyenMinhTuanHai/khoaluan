@@ -4,6 +4,7 @@
     src: "templates/domain.com.conf.j2"
     dest: "/etc/nginx/conf.d/{{ http_conf }}"
   notify:
+    - start nginx
     - restart nginx
 
 - name: Check Default.conf File Exists
@@ -45,3 +46,6 @@
     line: define('DB_HOST', 'localhost');
   notify:
     - restart nginx
+
+- name: Flush handlers
+  meta: flush_handlers

@@ -2,6 +2,8 @@
 # Lưu file ssh_key.pem tại thư mục này
 
 # 1 số câu lệnh cần thiết
+# scp -r -i ssh_key.pem ../with-cert centos@13.212.234.111:~
+# scp -r -i ssh_key.pem ../with-cert ubuntu@13.212.248.249:~
 # systemctl start mariadb
 # mysql_secure_installation
 # sudo passwd root

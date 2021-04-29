@@ -1,4 +1,7 @@
 ---
+- name: Disable SELinux
+  selinux:
+    state: disabled
 - name: Update Packages
   yum:
     name: '*'
@@ -24,17 +27,18 @@
     enabled: yes
 
     # Install MariaDB, Nginx
-- name: Install Mariadb, Nginx
+- name: Install Mariadb, Nginx, Firewalld
   yum: 
     name: "{{ item }}"
     update_cache: yes
     state: latest
-  loop: [ 'nginx', 'MariaDB-server', 'MariaDB-client', 'MySQL-python', 'unzip', 'firewalld' ]
+  loop: [ 'nginx', 'MariaDB-server', 'MariaDB-client', 'MySQL-python', 'firewalld', 'unzip' ]
   notify:
     - start nginx
     - start mariadb
 # Copy script and install Php
-- copy:
+- name: Copy Script
+  copy:
     src: ./roles/lemp/files/php_install.sh
     dest: /root/php_install.sh
     owner: root
@@ -66,6 +70,10 @@
     dest: "/etc/nginx/conf.d/default.conf"
   notify:
     - restart nginx
+    - restart mariadb
+
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: Sets Up PHP Info Page
   template:

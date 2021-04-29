@@ -7,3 +7,4 @@ terraform.tfstate.backup
 inventory
 ansible-main/roles/import_source/files/
 ansible
+wordpress-source
