@@ -28,24 +28,24 @@ resource "aws_instance" "web-server" {
     on_failure = continue
   }
 
-  // Tạo thư mục lưu file trong wordpress-source
-  /*provisioner "remote-exec" {
-    inline = [
-      "mkdir ~/wordpress-source-remote/",
-    ]
+  // Tạo thư mục lưu file trong with-cert
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "mkdir ~/wordpress-source-remote/",
+  #   ]
 
-    connection {
-      type        = "ssh"
-      user        = "centos"
-      private_key = file(var.ssh_key)
-      host        = aws_instance.web-server.public_ip
-    }
-  }*/
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "centos"
+  #     private_key = file(var.ssh_key)
+  #     host        = aws_instance.web-server.public_ip
+  #   }
+  # }
 
-  // Copy tất cả file trong thư mục wordpress-source đến /home/centos/wordpress-source-remote/
-  /*provisioner "file" {
-    source      = "wordpress-source/"
-    destination = "~/wordpress-source-remote/"    /* ~/ = /home/centos 
+  // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
+  provisioner "file" {
+    source      = "../with-cert"
+    destination = "~/"    // ~/ = /home/centos 
     
     connection {
       type        = "ssh"
@@ -53,7 +53,7 @@ resource "aws_instance" "web-server" {
       private_key = file(var.ssh_key)
       host        = aws_instance.web-server.public_ip
     }
-  }*/
+  }
 
   tags = {
     Name = "terraform-web-server"
