@@ -4,6 +4,7 @@
 # 1 số câu lệnh cần thiết
 # scp -r -i ssh_key.pem ../with-cert centos@13.212.234.111:~
 # scp -r -i ssh_key.pem ../with-cert ubuntu@13.212.248.249:~
+# 
 # systemctl start mariadb
 # mysql_secure_installation
 # sudo passwd root
@@ -24,8 +25,8 @@
 # PermitRootLogin without-password
 # sudo cp /home/centos/.ssh/authorized_keys /root/.ssh
 # 
-# vi /etc/selinux/config
+# sudo vi /etc/selinux/config
 # selinux = disabled
-# reboot
+# sudo reboot
 # 
 # C:\Windows\System32\drivers\etc\hosts
