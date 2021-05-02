@@ -55,6 +55,33 @@ resource "aws_instance" "web-server" {
     }
   }
 
+  provisioner "file" {
+    source      = "./install_docker.sh"
+    destination = "~/install_docker.sh"    // ~/ = /home/centos 
+    
+    connection {
+      type        = "ssh"
+      user        = "centos"
+      private_key = file(var.ssh_key)
+      host        = aws_instance.web-server.public_ip
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "cd",
+      "echo 'IP Address: ${aws_instance.web-server.private_ip} install docker'",
+      "bash install_docker.sh",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "centos"
+      private_key = file(var.ssh_key)
+      host        = aws_instance.web-server.public_ip
+    }
+  }
+
   tags = {
     Name = "terraform-web-server"
   }
