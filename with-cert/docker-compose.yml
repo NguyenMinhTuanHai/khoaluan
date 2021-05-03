@@ -1,0 +1,92 @@
+version: "3"
+
+#NETWORK
+networks:
+  devcrm-networks:
+    driver: bridge
+
+#VOLUMES
+volumes: 
+  site_web:
+    driver_opts: 
+      type: none
+      device: /home/centos/test-cert/sources/
+      o: bind
+
+services: 
+  # container php
+  devcrm-php:
+    container_name: devcrm-php
+    build: 
+      dockerfile: Dockerfile
+      context: ./php
+    hostname: devcrm-php
+    restart: always
+    networks: 
+      - devcrm-networks
+    volumes:
+      - site_web:/data/cms_dev
+  
+  # container nginx
+  devcrm-nginx:
+    container_name: devcrm-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    hostname: devcrm-nginx
+    restart: always
+    networks: 
+      - devcrm-networks
+    volumes: 
+      - site_web:/data/cms_dev
+      - ./certbot/conf:/etc/nginx/ssl
+      - ./certbot/data:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+
+  # Let's Encrypt
+  # certbot:
+  #   container_name: devcrm-certbot
+  #   image: certbot/certbot
+  #   restart: always
+  #   networks: 
+  #     - devcrm-networks
+  #   command: certonly --webroot --webroot-path=/var/www/certbot --email admin@dockertest.ga --agree-tos --no-eff-email -d dockertest.ga -d www.dockertest.ga
+  #   volumes:
+  #     - site_web:/data/cms_dev
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/logs:/var/log/letsencrypt
+  #     - ./certbot/data:/var/www/certbot
+  #   depends_on:
+  #     - devcrm-nginx
+
+  # container mysql
+  devcrm-mariadb:
+    container_name: devcrm-mariadb
+    image: "mariadb:10.4.18"
+    hostname: devcrm-mariadb
+    restart: always
+    networks: 
+      - devcrm-networks
+    volumes: 
+      - ./database:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=Admin123
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=7581460d
+
+ # container mysql
+  devcrm-pma:
+    container_name: devcrm-pma
+    build:
+      dockerfile: Dockerfile
+      context: ./phpmyadmin
+    hostname: devcrm-pma
+    restart: always
+    networks: 
+      - devcrm-networks
+    environment: 
+      - PMA_HOST=devcrm-mariadb

@@ -21,6 +21,11 @@ sudo service docker restart
 docker-compose --version
 
 echo "-----------------DONE-----------------"
+
+cd ~
+mkdir test-cert
+mkdir test-cert/sources
+
 echo "-----------------EXIT AND LOG IN AGAIN-----------------"
 
 #sudo reboot
