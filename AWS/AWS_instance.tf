@@ -67,11 +67,33 @@ resource "aws_instance" "web-server" {
     }
   }
 
+  provisioner "file" {
+    source      = "./wordpress-5.7.1.tar.gz"
+    destination = "~/wordpress-5.7.1.tar.gz"    // ~/ = /home/centos 
+    
+    connection {
+      type        = "ssh"
+      user        = "centos"
+      private_key = file(var.ssh_key)
+      host        = aws_instance.web-server.public_ip
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "cd",
       "echo 'IP Address: ${aws_instance.web-server.private_ip} install docker'",
       "bash install_docker.sh",
+      "rm install_docker.sh",
+      # "sudo yum -y update",
+      # "sudo yum -y install yum-utils device-mapper-persistent-data lvm2",
+      # "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo",
+      # "sudo yum -y install docker-ce",
+      # "sudo systemctl start docker",
+      # "sudo systemctl enable docker",
+      # "sudo curl -L 'https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose",
+      # "sudo chmod +x /usr/local/bin/docker-compose",
+      # "sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose"
     ]
 
     connection {

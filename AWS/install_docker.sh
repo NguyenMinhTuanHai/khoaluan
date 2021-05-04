@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "-----------------install docker-----------------"
-sudo yum install -y yum-utils
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 sudo yum install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
@@ -18,16 +18,20 @@ sudo groupadd docker-compose
 sudo usermod -aG docker-compose $USER
 sudo service docker restart
 
-docker-compose --version
-
 echo "-----------------DONE-----------------"
 
 cd ~
 mkdir test-cert
 mkdir test-cert/sources
 
-echo "-----------------EXIT AND LOG IN AGAIN-----------------"
+echo "-----------------DOWNLOAD + EXTRACT WORDPRESS -----------------"
+cd ~
+# curl -O https://wordpress.org/wordpress-5.7.1.tar.gz
+tar xzvf wordpress-5.7.1.tar.gz -C test-cert/sources/
+rm -rf wordpress-5.7.1.tar.gz
 
-#sudo reboot
+mv test-cert/sources/wordpress/* test-cert/sources/
+rm -rf test-cert/sources/wordpress
+#sudo reboot`
 # sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # sudo service docker restart

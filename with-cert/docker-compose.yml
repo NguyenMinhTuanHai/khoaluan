@@ -39,8 +39,8 @@ services:
       - devcrm-networks
     volumes: 
       - site_web:/data/cms_dev
-      - ./certbot/conf:/etc/nginx/ssl
-      - ./certbot/data:/var/www/certbot
+      # - ./certbot/conf:/etc/nginx/ssl
+      # - ./certbot/data:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
