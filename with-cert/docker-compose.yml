@@ -10,7 +10,7 @@ volumes:
   site_web:
     driver_opts: 
       type: none
-      device: /home/centos/test-cert/sources/
+      device: /home/centos/container_volume/
       o: bind
 
 services: 
