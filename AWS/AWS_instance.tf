@@ -7,24 +7,24 @@ resource "aws_instance" "web-server" {
 
   // tạo file inventory với thông tin máy ảo sẵn sàng
   provisioner "local-exec" {
-    command = "echo [webserver] > ../ansible-main/hosts"
+    command = "echo [webserver] > ../ansible-main/AWS_hosts"
     on_failure = continue
   }
 
   provisioner "local-exec" {
-    command = "echo server1 ansible_host=${aws_instance.web-server.public_ip} ansible_user=centos ansible_ssh_private_key_file=../AWS/ssh_key.pem >> ../ansible-main/hosts"
+    command = "echo server1 ansible_host=${aws_instance.web-server.public_ip} ansible_user=centos ansible_ssh_private_key_file=../AWS/ssh_key.pem >> ../ansible-main/AWS_hosts"
     on_failure = continue
   }
 
-  // Tao file easy_access.txt
+  // Tao file AWS_easy_access.txt
 
   provisioner "local-exec" {
-    command = "echo '# Lenh ssh vao Instance' > easy_access.txt"
+    command = "echo '# Lenh ssh vao Instance' >  AWS_easy_access.txt"
     on_failure = continue
   }
   
   provisioner "local-exec" {
-    command = "echo '# ssh -i ssh_key.pem centos@${aws_instance.web-server.public_ip} ' >> easy_access.txt"
+    command = "echo '# ssh -i ssh_key.pem centos@${aws_instance.web-server.public_ip} ' >> AWS_easy_access.txt"
     on_failure = continue
   }
 

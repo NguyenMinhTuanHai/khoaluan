@@ -10,5 +10,6 @@ ansible-main/hosts
 ansible
 wordpress-source
 #with-cert
-AWS/easy_access.txt
+AWS/AWS_easy_access.txt
 AWS/command_install_dockercompose.txt
+ansible-main/AWS_hosts
