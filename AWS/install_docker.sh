@@ -23,17 +23,10 @@ echo "-----------------DONE-----------------"
 cd ~
 mkdir container_volume
 
-echo "-----------------DOWNLOAD + EXTRACT WORDPRESS -----------------"
+echo "-----------------EXTRACT WORDPRESS -----------------"
 cd ~
-# curl -O https://wordpress.org/wordpress-5.7.1.tar.gz
 tar xzvf wordpress-5.7.1.tar.gz -C container_volume/
 rm -rf wordpress-5.7.1.tar.gz
 
 mv container_volume/wordpress/* container_volume/
 rm -rf container_volume/sources/wordpress
-#sudo reboot`
-# sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-# sudo service docker restart
-# cd ~
-# cd with-cert/
-# sudo docker-compose up -d

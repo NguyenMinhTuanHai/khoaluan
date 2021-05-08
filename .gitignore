@@ -7,8 +7,6 @@ terraform.tfstate.backup
 inventory
 ansible-main/roles/import_source/files/
 ansible-main/hosts
-ansible
-wordpress-source
 #with-cert
 AWS/AWS_easy_access.txt
 AWS/command_install_dockercompose.txt

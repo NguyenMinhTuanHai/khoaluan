@@ -28,19 +28,6 @@ resource "aws_instance" "web-server" {
     on_failure = continue
   }
 
-  // Tạo thư mục lưu file trong with-cert
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "mkdir ~/wordpress-source-remote/",
-  #   ]
-
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "centos"
-  #     private_key = file(var.ssh_key)
-  #     host        = aws_instance.web-server.public_ip
-  #   }
-  # }
 
   // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
   provisioner "file" {
@@ -79,21 +66,13 @@ resource "aws_instance" "web-server" {
     }
   }
 
+  // Chay script cai dat docker + docker-compose 
   provisioner "remote-exec" {
     inline = [
       "cd",
       "echo 'IP Address: ${aws_instance.web-server.private_ip} install docker'",
       "bash install_docker.sh",
       "rm install_docker.sh",
-      # "sudo yum -y update",
-      # "sudo yum -y install yum-utils device-mapper-persistent-data lvm2",
-      # "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo",
-      # "sudo yum -y install docker-ce",
-      # "sudo systemctl start docker",
-      # "sudo systemctl enable docker",
-      # "sudo curl -L 'https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose",
-      # "sudo chmod +x /usr/local/bin/docker-compose",
-      # "sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose"
     ]
 
     connection {
