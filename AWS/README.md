@@ -1,6 +1,6 @@
 # khoaluan
 # 
-# Lưu file ssh_key.pem + wordpress-5.7.1.tar.gz tại thư mục này
+# Lưu file ssh_key.pem tại thư mục này
 # 
 # Khi chạy terraform apply --auto-approve tại thư mục này:
 # File ../ansible-main/AWS_hosts được tạo chứa thông tin instance
