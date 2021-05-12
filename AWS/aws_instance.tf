@@ -31,6 +31,7 @@ resource "aws_instance" "web-server" {
   provisioner "file" {
     source      = "./install_docker.sh"
     destination = "~/install_docker.sh"    // ~/ = /home/centos 
+    on_failure = continue
     
     connection {
       type        = "ssh"
@@ -61,7 +62,8 @@ resource "aws_instance" "web-server" {
   provisioner "file" {
     source      = "../docker"
     destination = "~/"    // ~/ = /home/centos 
-    
+    on_failure = continue
+
     connection {
       type        = "ssh"
       user        = "centos"
