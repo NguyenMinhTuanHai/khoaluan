@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  #php container
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php
+    restart: unless-stopped
+    hostname: php
+    tty: true
+    environment:
+      SERVICE_NAME: php
+    working_dir: /data/www
+    volumes:
+      - ./source:/data/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - project-network
+
+  #Nginx container
+  nginx:
+    container_name: nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    restart: unless-stopped
+    hostname: nginx
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./source:/data/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./ssl:/etc/letsencrypt
+    networks:
+      - project-network
+
+  #MySQL Service
+  mariadb:
+    image: mariadb:10.4.18
+    container_name: mariadb
+    restart: unless-stopped
+    hostname: mariadb
+    tty: true
+    ports:
+      - "3306:3306"
+    networks:
+      - project-network
+    volumes: 
+      - ./database:/var/lib/mysql/
+      - ./mariadb/my.cnf:/etc/mysql/my.cnf
+      - ./source/database.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=7581460d
+      - MYSQL_DATABASE=blog
+      - MYSQL_USER=blog_user
+      - MYSQL_PASSWORD=Admin123
+
+ # container phpmyadmin
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    hostname: phpmyadmin
+    restart: always
+    volumes:
+      - ./phpmyadmin/config.inc.php:/etc/phpmyadmin/config.inc.php
+    networks: 
+      - project-network
+    environment: 
+      - PMA_HOST=mariadb
+      - PMA_ABSOLUTE_URI=https://blog.isphone.ga/phpMyAdmin/
+    ports:
+      - 8080:80
+#Docker Networksx
+networks:
+  project-network:
+    driver: bridge
+#Volumes
+volumes:
+  database:
+    driver: local

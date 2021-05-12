@@ -28,20 +28,6 @@ resource "aws_instance" "web-server" {
     on_failure = continue
   }
 
-
-  // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
-  # provisioner "file" {
-  #   source      = "../docker"
-  #   destination = "~/"    // ~/ = /home/centos 
-    
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "centos"
-  #     private_key = file(var.ssh_key)
-  #     host        = aws_instance.web-server.public_ip
-  #   }
-  # }
-
   provisioner "file" {
     source      = "./install_docker.sh"
     destination = "~/install_docker.sh"    // ~/ = /home/centos 
@@ -53,18 +39,6 @@ resource "aws_instance" "web-server" {
       host        = aws_instance.web-server.public_ip
     }
   }
-
-  # provisioner "file" {
-  #   source      = "./wordpress-5.7.1.tar.gz"
-  #   destination = "~/wordpress-5.7.1.tar.gz"    // ~/ = /home/centos 
-    
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "centos"
-  #     private_key = file(var.ssh_key)
-  #     host        = aws_instance.web-server.public_ip
-  #   }
-  # }
 
   // Chay script cai dat docker + docker-compose 
   provisioner "remote-exec" {
@@ -82,6 +56,32 @@ resource "aws_instance" "web-server" {
       host        = aws_instance.web-server.public_ip
     }
   }
+
+  // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
+  provisioner "file" {
+    source      = "../docker"
+    destination = "~/"    // ~/ = /home/centos 
+    
+    connection {
+      type        = "ssh"
+      user        = "centos"
+      private_key = file(var.ssh_key)
+      host        = aws_instance.web-server.public_ip
+    }
+  }
+
+
+  # provisioner "file" {
+  #   source      = "./wordpress-5.7.1.tar.gz"
+  #   destination = "~/wordpress-5.7.1.tar.gz"    // ~/ = /home/centos 
+    
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "centos"
+  #     private_key = file(var.ssh_key)
+  #     host        = aws_instance.web-server.public_ip
+  #   }
+  # }
 
   tags = {
     Name = "terraform-web-server"
