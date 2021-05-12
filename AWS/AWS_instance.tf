@@ -31,7 +31,7 @@ resource "aws_instance" "web-server" {
 
   // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
   provisioner "file" {
-    source      = "../with-cert"
+    source      = "../docker"
     destination = "~/"    // ~/ = /home/centos 
     
     connection {
@@ -54,17 +54,17 @@ resource "aws_instance" "web-server" {
     }
   }
 
-  provisioner "file" {
-    source      = "./wordpress-5.7.1.tar.gz"
-    destination = "~/wordpress-5.7.1.tar.gz"    // ~/ = /home/centos 
+  # provisioner "file" {
+  #   source      = "./wordpress-5.7.1.tar.gz"
+  #   destination = "~/wordpress-5.7.1.tar.gz"    // ~/ = /home/centos 
     
-    connection {
-      type        = "ssh"
-      user        = "centos"
-      private_key = file(var.ssh_key)
-      host        = aws_instance.web-server.public_ip
-    }
-  }
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "centos"
+  #     private_key = file(var.ssh_key)
+  #     host        = aws_instance.web-server.public_ip
+  #   }
+  # }
 
   // Chay script cai dat docker + docker-compose 
   provisioner "remote-exec" {

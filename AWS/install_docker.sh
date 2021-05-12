@@ -20,13 +20,12 @@ sudo service docker restart
 
 echo "-----------------DONE-----------------"
 
-cd ~
-mkdir container_volume
+# cd ~
+# mkdir container_volume
 
-echo "-----------------EXTRACT WORDPRESS -----------------"
-cd ~
-tar xzvf wordpress-5.7.1.tar.gz -C container_volume/
-rm -rf wordpress-5.7.1.tar.gz
-
-mv container_volume/wordpress/* container_volume/
-rm -rf container_volume/sources/wordpress
+# echo "-----------------EXTRACT WORDPRESS -----------------"
+# cd ~
+# tar xzvf wordpress-5.7.1.tar.gz -C container_volume/
+# rm -rf wordpress-5.7.1.tar.gz
+# mv container_volume/wordpress/* container_volume/
+# rm -rf container_volume/sources/wordpress
