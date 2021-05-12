@@ -30,17 +30,17 @@ resource "aws_instance" "web-server" {
 
 
   // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
-  provisioner "file" {
-    source      = "../docker"
-    destination = "~/"    // ~/ = /home/centos 
+  # provisioner "file" {
+  #   source      = "../docker"
+  #   destination = "~/"    // ~/ = /home/centos 
     
-    connection {
-      type        = "ssh"
-      user        = "centos"
-      private_key = file(var.ssh_key)
-      host        = aws_instance.web-server.public_ip
-    }
-  }
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "centos"
+  #     private_key = file(var.ssh_key)
+  #     host        = aws_instance.web-server.public_ip
+  #   }
+  # }
 
   provisioner "file" {
     source      = "./install_docker.sh"
