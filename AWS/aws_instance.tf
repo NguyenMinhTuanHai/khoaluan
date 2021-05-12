@@ -57,7 +57,7 @@ resource "aws_instance" "web-server" {
     }
   }
 
-  // Copy tất cả file trong thư mục with-cert đến /home/centos/with-cert/
+  // Copy tất cả file trong thư mục docker đến /home/centos/docker
   provisioner "file" {
     source      = "../docker"
     destination = "~/"    // ~/ = /home/centos 
